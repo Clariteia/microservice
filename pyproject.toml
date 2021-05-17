@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "minos_microservice_template"
-version = "0.0.11"
+version = "0.0.1"
 description = "Python package whose purpose is to connect and orchestrate the functionality among all the minos modules."
 readme = "README.md"
 repository = "https://github.com/clariteia/minos_microservice_template"
@@ -31,9 +31,10 @@ include = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-minos-microservice-common = "^0.0.11"
-minos-microservice-networks = "^0.0.1"
-minos-microservice-saga = "^0.0.2"
+minos-microservice-common = "^0.0.12"
+minos-microservice-networks = "^0.0.2"
+# minos-microservice-saga = "^0.0.2"
+cached-property = "^1.5.2"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b"
