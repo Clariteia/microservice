@@ -11,6 +11,4 @@ from .services import (
     RestService,
     SagaService,
 )
-from .aggregates import (
-    Order,
-)
+from .aggregates import Order
