@@ -9,9 +9,13 @@ from aiomisc import (
     Service,
     entrypoint,
 )
-from cached_property import cached_property
+from cached_property import (
+    cached_property,
+)
 
-from minos.common import MinosConfig
+from minos.common import (
+    MinosConfig,
+)
 from minos.networks import (
     REST,
     MinosCommandPeriodicService,
