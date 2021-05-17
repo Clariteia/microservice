@@ -37,55 +37,59 @@ class EntrypointLauncher(object):
         self.interval = interval
 
     def launch(self) -> None:
+        """TODO
+
+        :return: TODO
+        """
         with entrypoint(*self._services) as loop:
             loop.run_forever()
 
     @cached_property
     def _services(self) -> list[Service]:
         return [
-            self._queue_broker,
-            self._command_queue_handler,
             self._command_handler,
-            self._command_reply_queue_handler,
+            self._command_queue_handler,
             self._command_reply_handler,
-            self._event_queue_handler,
+            self._command_reply_queue_handler,
             self._event_handler,
+            self._event_queue_handler,
+            self._queue_broker,
+            self._rest_handler,
             self._snapshot,
-            self._rest,
         ]
 
     @cached_property
-    def _queue_broker(self) -> MinosQueueService:
-        return MinosQueueService(self.config, interval=self.interval)
-
-    @cached_property
-    def _command_queue_handler(self) -> MinosCommandServerService:
+    def _command_handler(self) -> MinosCommandServerService:
         return MinosCommandServerService(self.config)
 
     @cached_property
-    def _command_handler(self) -> MinosCommandPeriodicService:
+    def _command_queue_handler(self) -> MinosCommandPeriodicService:
         return MinosCommandPeriodicService(self.config, interval=self.interval)
 
     @cached_property
-    def _command_reply_queue_handler(self) -> MinosCommandReplyServerService:
+    def _command_reply_handler(self) -> MinosCommandReplyServerService:
         return MinosCommandReplyServerService(self.config)
 
     @cached_property
-    def _command_reply_handler(self) -> MinosCommandReplyPeriodicService:
+    def _command_reply_queue_handler(self) -> MinosCommandReplyPeriodicService:
         return MinosCommandReplyPeriodicService(self.config, interval=self.interval)
 
     @cached_property
-    def _event_queue_handler(self) -> MinosEventServerService:
+    def _event_handler(self) -> MinosEventServerService:
         return MinosEventServerService(self.config)
 
     @cached_property
-    def _event_handler(self) -> MinosEventPeriodicService:
+    def _event_queue_handler(self) -> MinosEventPeriodicService:
         return MinosEventPeriodicService(self.config, interval=self.interval)
+
+    @cached_property
+    def _rest_handler(self):
+        return REST(self.config)
 
     @cached_property
     def _snapshot(self):
         return MinosSnapshotService(self.config, interval=self.interval)
 
     @cached_property
-    def _rest(self):
-        return REST(self.config)
+    def _queue_broker(self) -> MinosQueueService:
+        return MinosQueueService(self.config, interval=self.interval)
