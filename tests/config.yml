@@ -7,12 +7,12 @@ rest:
         - name: AddOrder
           route: /order_microservice
           method: POST
-          controller: tests.order_microservice.order.RestService
+          controller: tests.order.RestService
           action: add_order
         - name: GetOrder
           route: /order_microservice
           method: GET
-          controller: tests.order_microservice.order.RestService
+          controller: tests.order.RestService
           action: get_order
 repository:
     database: order_db
@@ -31,10 +31,10 @@ events:
     port: 9092
     items:
         - name: TicketAdded
-          controller: tests.order_microservice.order.CqrsService
+          controller: tests.order.CqrsService
           action: ticket_added
         - name: TicketDeleted
-          controller: tests.order_microservice.order.CqrsService
+          controller: tests.order.CqrsService
           action: ticket_deleted
     queue:
         database: order_db
@@ -49,16 +49,16 @@ commands:
     port: 9092
     items:
         - name: AddOrder
-          controller: tests.order_microservice.order.CommandService
+          controller: tests.order.CommandService
           action: add_order
         - name: DeleteOrder
-          controller: tests.order_microservice.order.CommandService
+          controller: tests.order.CommandService
           action: delete_order
         - name: UpdateOrder
-          controller: tests.order_microservice.order.CommandService
+          controller: tests.order.CommandService
           action: update_order
         - name: GetOrder
-          controller: tests.order_microservice.order.CommandService
+          controller: tests.order.CommandService
           action: get_order
     queue:
         database: order_db
@@ -71,10 +71,10 @@ commands:
 saga:
     items:
         - name: AddOrder
-          controller: tests.order_microservice.order.SagaService
+          controller: tests.order.SagaService
           action: add_order
         - name: DeleteOrder
-          controller: tests.order_microservice.order.SagaService
+          controller: tests.order.SagaService
           action: delete_order
     queue:
         database: order_db
