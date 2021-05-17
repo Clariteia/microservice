@@ -32,8 +32,9 @@ from minos.networks import (
 class EntrypointLauncher(object):
     """TODO"""
 
-    def __init__(self, config: MinosConfig):
+    def __init__(self, config: MinosConfig, interval: float = 0.1):
         self.config = config
+        self.interval = interval
 
     def launch(self) -> None:
         with entrypoint(*self._services) as loop:
@@ -55,7 +56,7 @@ class EntrypointLauncher(object):
 
     @cached_property
     def _queue_broker(self) -> MinosQueueService:
-        return MinosQueueService(self.config)
+        return MinosQueueService(self.config, interval=self.interval)
 
     @cached_property
     def _command_queue_handler(self) -> MinosCommandServerService:
@@ -63,7 +64,7 @@ class EntrypointLauncher(object):
 
     @cached_property
     def _command_handler(self) -> MinosCommandPeriodicService:
-        return MinosCommandPeriodicService(self.config)
+        return MinosCommandPeriodicService(self.config, interval=self.interval)
 
     @cached_property
     def _command_reply_queue_handler(self) -> MinosCommandReplyServerService:
@@ -71,7 +72,7 @@ class EntrypointLauncher(object):
 
     @cached_property
     def _command_reply_handler(self) -> MinosCommandReplyPeriodicService:
-        return MinosCommandReplyPeriodicService(self.config)
+        return MinosCommandReplyPeriodicService(self.config, interval=self.interval)
 
     @cached_property
     def _event_queue_handler(self) -> MinosEventServerService:
@@ -79,11 +80,11 @@ class EntrypointLauncher(object):
 
     @cached_property
     def _event_handler(self) -> MinosEventPeriodicService:
-        return MinosEventPeriodicService(self.config)
+        return MinosEventPeriodicService(self.config, interval=self.interval)
 
     @cached_property
     def _snapshot(self):
-        return MinosSnapshotService(self.config)
+        return MinosSnapshotService(self.config, interval=self.interval)
 
     @cached_property
     def _rest(self):
