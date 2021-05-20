@@ -15,13 +15,17 @@ from cached_property import (
 
 from minos.common import (
     MinosConfig,
+    MinosRepository,
+    PostgreSqlMinosRepository,
 )
 from minos.networks import (
     REST,
+    MinosCommandBroker,
     MinosCommandPeriodicService,
     MinosCommandReplyPeriodicService,
     MinosCommandReplyServerService,
     MinosCommandServerService,
+    MinosEventBroker,
     MinosEventPeriodicService,
     MinosEventServerService,
     MinosQueueService,
@@ -93,3 +97,23 @@ class EntrypointLauncher(object):
     @cached_property
     def _queue_broker(self) -> MinosQueueService:
         return MinosQueueService(self.config, interval=self.interval)
+
+    @cached_property
+    def _event_broker(self) -> MinosEventBroker:
+        return MinosEventBroker.from_config(config=self.config)
+
+    @cached_property
+    def _command_broker(self) -> MinosCommandBroker:
+        return MinosCommandBroker.from_config(config=self.config)
+
+    @cached_property
+    def _command_reply_broker(self):
+        raise NotImplementedError
+
+    @cached_property
+    def _repository(self) -> MinosRepository:
+        return PostgreSqlMinosRepository.from_config(config=self.config)
+
+    @property
+    def _saga_manager(self):
+        raise NotImplementedError
