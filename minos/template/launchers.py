@@ -7,6 +7,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 """
 import asyncio
 import sys
+from typing import (
+    NoReturn,
+)
 
 from aiomisc import (
     Service,
@@ -43,16 +46,16 @@ from .injectors import (
 
 
 class EntrypointLauncher(object):
-    """TODO"""
+    """EntryPoint Launcher class."""
 
     def __init__(self, config, interval: float = 0.1):
         self.config = config
         self.interval = interval
 
-    def launch(self) -> None:
-        """TODO
+    def launch(self) -> NoReturn:
+        """Launch a new execution and keeps running forever..
 
-        :return: TODO
+        :return: This method does not return anything.
         """
         self._launch_injector()
         self._launch_services()
