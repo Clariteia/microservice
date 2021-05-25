@@ -37,8 +37,8 @@ from minos.saga import (
     SagaManager,
 )
 
-from ..injectors import (
-    MinosDependencyInjector,
+from .injectors import (
+    DependencyInjector,
 )
 
 
@@ -78,8 +78,8 @@ class EntrypointLauncher(object):
         Aggregate._repository = self._injector.container.repository()
 
     @cached_property
-    def _injector(self) -> MinosDependencyInjector:
-        injector = MinosDependencyInjector(
+    def _injector(self) -> DependencyInjector:
+        injector = DependencyInjector(
             config=self.config,
             command_broker_cls=CommandBroker,
             command_reply_broker_cls=CommandReplyBroker,

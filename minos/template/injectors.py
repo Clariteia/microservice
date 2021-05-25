@@ -23,7 +23,7 @@ from dependency_injector import (
 )
 
 
-class MinosDependencyInjector(object):
+class DependencyInjector(object):
     """Wrapper class for ``dependency_injector.containers.Container``. """
 
     def __init__(
