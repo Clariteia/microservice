@@ -69,13 +69,12 @@ commands:
         records: 10
         retry: 2
 saga:
+    storage:
+        path: "./order.lmdb"
     items:
-        - name: AddOrder
+        - name: UpdateOrderReply
           controller: tests.order.SagaService
-          action: add_order
-        - name: DeleteOrder
-          controller: tests.order.SagaService
-          action: delete_order
+          action: UPDATE_ORDER
     queue:
         database: order_db
         user: minos

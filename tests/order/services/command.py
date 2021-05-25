@@ -8,6 +8,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 from minos.common import (
     Command,
 )
+from tests.order import (
+    Order,
+)
 
 
 class CommandService(object):
@@ -15,7 +18,7 @@ class CommandService(object):
         return "get_order"
 
     async def add_order(self, topic: str, command: Command):
-        return "add_order"
+        return [Order(1, 1, "bar", 3)]
 
     async def delete_order(self, topic: str, command: Command):
         return "delete_order"

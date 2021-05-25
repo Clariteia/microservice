@@ -8,6 +8,9 @@ Minos framework can not be copied and/or distributed without the express permiss
 
 import unittest
 
+from minos.common import (
+    MinosConfig,
+)
 from minos.common.testing import (
     PostgresAsyncTestCase,
 )
@@ -25,6 +28,12 @@ class TestEntrypointLauncher(PostgresAsyncTestCase):
     def test_constructor(self):
         launcher = EntrypointLauncher(self.config)
         self.assertEqual(self.config, launcher.config)
+
+    @unittest.skip
+    def test_launch(self):
+        config = MinosConfig(self.config)
+        launcher = EntrypointLauncher(config)
+        launcher.launch()
 
 
 if __name__ == "__main__":

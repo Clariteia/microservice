@@ -5,6 +5,9 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+import asyncio
+import sys
+
 from aiomisc import (
     Service,
     entrypoint,
@@ -14,29 +17,35 @@ from cached_property import (
 )
 
 from minos.common import (
-    MinosConfig,
-    MinosRepository,
     PostgreSqlMinosRepository,
 )
 from minos.networks import (
-    REST,
-    MinosCommandBroker,
-    MinosCommandPeriodicService,
-    MinosCommandReplyPeriodicService,
-    MinosCommandReplyServerService,
-    MinosCommandServerService,
-    MinosEventBroker,
-    MinosEventPeriodicService,
-    MinosEventServerService,
-    MinosQueueService,
-    MinosSnapshotService,
+    CommandBroker,
+    CommandConsumerService,
+    CommandHandlerService,
+    CommandReplyBroker,
+    CommandReplyConsumerService,
+    CommandReplyHandlerService,
+    EventBroker,
+    EventConsumerService,
+    EventHandlerService,
+    ProducerService,
+    RestService,
+    SnapshotService,
+)
+from minos.saga import (
+    SagaManager,
+)
+
+from ..injectors import (
+    MinosDependencyInjector,
 )
 
 
 class EntrypointLauncher(object):
     """TODO"""
 
-    def __init__(self, config: MinosConfig, interval: float = 0.1):
+    def __init__(self, config, interval: float = 0.1):
         self.config = config
         self.interval = interval
 
@@ -45,75 +54,55 @@ class EntrypointLauncher(object):
 
         :return: TODO
         """
+        self._launch_injector()
+        self._launch_services()
+
+    def _launch_injector(self):
+        loop = asyncio.new_event_loop()
+        loop.run_until_complete(self._injector.wire(modules=[sys.modules[__name__]]))
+
+        from minos.common import (
+            Aggregate,
+        )
+        from minos.networks import (
+            CommandHandler,
+            CommandReplyHandler,
+        )
+        from minos.saga import (
+            PublishExecutor,
+        )
+
+        CommandReplyHandler.saga_manager = self._injector.container.saga_manager()
+        CommandHandler.broker = self._injector.container.command_reply_broker()
+        PublishExecutor.broker = self._injector.container.command_broker()
+        Aggregate._repository = self._injector.container.repository()
+
+    @cached_property
+    def _injector(self) -> MinosDependencyInjector:
+        injector = MinosDependencyInjector(
+            config=self.config,
+            command_broker_cls=CommandBroker,
+            command_reply_broker_cls=CommandReplyBroker,
+            event_broker_cls=EventBroker,
+            repository_cls=PostgreSqlMinosRepository,
+            saga_manager_cls=SagaManager,
+        )
+        return injector
+
+    def _launch_services(self):
         with entrypoint(*self._services) as loop:
             loop.run_forever()
 
     @cached_property
     def _services(self) -> list[Service]:
         return [
-            self._command_handler,
-            self._command_queue_handler,
-            self._command_reply_handler,
-            self._command_reply_queue_handler,
-            self._event_handler,
-            self._event_queue_handler,
-            self._queue_broker,
-            self._rest_handler,
-            self._snapshot,
+            CommandConsumerService(config=self.config, interval=self.interval),
+            CommandHandlerService(config=self.config, interval=self.interval),
+            CommandReplyConsumerService(config=self.config,),
+            CommandReplyHandlerService(config=self.config, interval=self.interval),
+            EventConsumerService(config=self.config,),
+            EventHandlerService(config=self.config, interval=self.interval),
+            RestService(config=self.config),
+            SnapshotService(config=self.config, interval=self.interval),
+            ProducerService(config=self.config, interval=self.interval),
         ]
-
-    @cached_property
-    def _command_handler(self) -> MinosCommandServerService:
-        return MinosCommandServerService(self.config)
-
-    @cached_property
-    def _command_queue_handler(self) -> MinosCommandPeriodicService:
-        return MinosCommandPeriodicService(self.config, interval=self.interval)
-
-    @cached_property
-    def _command_reply_handler(self) -> MinosCommandReplyServerService:
-        return MinosCommandReplyServerService(self.config)
-
-    @cached_property
-    def _command_reply_queue_handler(self) -> MinosCommandReplyPeriodicService:
-        return MinosCommandReplyPeriodicService(self.config, interval=self.interval)
-
-    @cached_property
-    def _event_handler(self) -> MinosEventServerService:
-        return MinosEventServerService(self.config)
-
-    @cached_property
-    def _event_queue_handler(self) -> MinosEventPeriodicService:
-        return MinosEventPeriodicService(self.config, interval=self.interval)
-
-    @cached_property
-    def _rest_handler(self):
-        return REST(self.config)
-
-    @cached_property
-    def _snapshot(self):
-        return MinosSnapshotService(self.config, interval=self.interval)
-
-    @cached_property
-    def _queue_broker(self) -> MinosQueueService:
-        return MinosQueueService(self.config, interval=self.interval)
-
-    @cached_property
-    def _event_broker(self) -> MinosEventBroker:
-        return MinosEventBroker.from_config(config=self.config)
-
-    @cached_property
-    def _command_broker(self) -> MinosCommandBroker:
-        return MinosCommandBroker.from_config(config=self.config)
-
-    @cached_property
-    def _command_reply_broker(self):
-        raise NotImplementedError
-
-    @cached_property
-    def _repository(self) -> MinosRepository:
-        return PostgreSqlMinosRepository.from_config(config=self.config)
-
-    @property
-    def _saga_manager(self):
-        raise NotImplementedError
