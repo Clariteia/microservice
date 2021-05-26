@@ -35,6 +35,7 @@ minos-microservice-common = "^0.0.12"
 minos-microservice-networks = "^0.0.2"
 # minos-microservice-saga = "^0.0.2"
 cached-property = "^1.5.2"
+typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b"
