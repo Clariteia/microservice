@@ -9,10 +9,17 @@ from aiohttp import (
     web,
 )
 
+from minos.saga import (
+    SagaManager,
+)
+
 
 class RestService(object):
+    saga_manager: SagaManager
+
     async def add_order(self, request):
-        return web.Response(text="Order added")
+        uuid = await self.saga_manager.run("UpdateOrder")
+        return web.Response(text=f"Order added: {uuid!r}")
 
     async def get_order(self, request):
         return web.Response(text="Order get")

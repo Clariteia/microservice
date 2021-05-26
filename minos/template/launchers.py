@@ -5,8 +5,8 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-import asyncio
 import sys
+import typing as t
 from typing import (
     NoReturn,
 )
@@ -57,28 +57,7 @@ class EntrypointLauncher(object):
 
         :return: This method does not return anything.
         """
-        self._launch_injector()
         self._launch_services()
-
-    def _launch_injector(self):
-        loop = asyncio.new_event_loop()
-        loop.run_until_complete(self._injector.wire(modules=[sys.modules[__name__]]))
-
-        from minos.common import (
-            Aggregate,
-        )
-        from minos.networks import (
-            CommandHandler,
-            CommandReplyHandler,
-        )
-        from minos.saga import (
-            PublishExecutor,
-        )
-
-        CommandReplyHandler.saga_manager = self._injector.container.saga_manager()
-        CommandHandler.broker = self._injector.container.command_reply_broker()
-        PublishExecutor.broker = self._injector.container.command_broker()
-        Aggregate._repository = self._injector.container.repository()
 
     @cached_property
     def _injector(self) -> DependencyInjector:
@@ -99,13 +78,51 @@ class EntrypointLauncher(object):
     @cached_property
     def _services(self) -> list[Service]:
         return [
+            LaunchService(self._injector),
             CommandConsumerService(config=self.config, interval=self.interval),
             CommandHandlerService(config=self.config, interval=self.interval),
-            CommandReplyConsumerService(config=self.config,),
+            CommandReplyConsumerService(config=self.config),
             CommandReplyHandlerService(config=self.config, interval=self.interval),
-            EventConsumerService(config=self.config,),
+            EventConsumerService(config=self.config),
             EventHandlerService(config=self.config, interval=self.interval),
             RestService(config=self.config),
             SnapshotService(config=self.config, interval=self.interval),
             ProducerService(config=self.config, interval=self.interval),
         ]
+
+
+class LaunchService(Service):
+    """TODO"""
+
+    def __init__(self, injector, **kwargs):
+        super().__init__(**kwargs)
+        self._injector = injector
+
+    async def start(self) -> t.Any:
+        """TODO"""
+        await self._launch_injector()
+
+    async def _launch_injector(self):
+        await self._injector.wire(modules=[sys.modules[__name__]])
+
+        from minos.common import (
+            Aggregate,
+        )
+        from minos.networks import (
+            CommandHandler,
+            CommandReplyHandler,
+        )
+        from minos.saga import (
+            PublishExecutor,
+        )
+
+        CommandReplyHandler.saga_manager = self._injector.container.saga_manager()
+        CommandHandler.broker = self._injector.container.command_reply_broker()
+        PublishExecutor.broker = self._injector.container.command_broker()
+        Aggregate._repository = self._injector.container.repository()
+
+        from tests.order.services.rest import (
+            RestService,
+        )
+
+        RestService.saga_manager = self._injector.container.saga_manager()

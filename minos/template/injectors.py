@@ -52,17 +52,21 @@ class DependencyInjector(object):
         container.config = providers.Object(self.config)
 
         if self.repository_cls is not None:
-            container.repository = providers.Object(self.repository_cls.from_config(config=self.config))
+            repository = self.repository_cls.from_config(config=self.config)
+            container.repository = providers.Object(repository)
+
         if self.event_broker_cls is not None:
-            container.event_broker = providers.Object(self.event_broker_cls.from_config(config=self.config))
+            event_broker = self.event_broker_cls.from_config(config=self.config)
+            container.event_broker = providers.Object(event_broker)
+
         if self.command_broker_cls is not None:
-            container.command_broker = providers.Object(
-                self.command_broker_cls.from_config(config=self.config, saga_id=None, task_id=None, reply_on=None)
-            )
+            command_broker = self.command_broker_cls.from_config(config=self.config)
+            container.command_broker = providers.Object(command_broker)
+
         if self.command_reply_broker_cls is not None:
-            container.command_reply_broker = providers.Object(
-                self.command_reply_broker_cls.from_config(config=self.config, saga_id=None, task_id=None)
-            )
+            command_reply_broker = self.command_reply_broker_cls.from_config(config=self.config)
+            container.command_reply_broker = providers.Object(command_reply_broker)
+
         if self.saga_manager_cls is not None:
             container.saga_manager = providers.Object(self.saga_manager_cls.from_config(config=self.config))
 
@@ -88,7 +92,6 @@ class DependencyInjector(object):
             await self.container.command_reply_broker().setup()
 
         if self.saga_manager_cls is not None:
-            self.container.saga_manager().already_setup = True
             await self.container.saga_manager().setup()
 
     async def unwire(self) -> NoReturn:

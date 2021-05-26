@@ -30,16 +30,11 @@ def foo_fn(context: SagaContext) -> MinosModel:
     return Foo("hello")
 
 
+def finish_fn(context):
+    return Foo("finish")
+
+
 class SagaService(object):
     UPDATE_ORDER = (
-        Saga("UpdateOrder")
-        .step()
-        .invoke_participant("CreateProduct", foo_fn)
-        .with_compensation("DeleteProduct", foo_fn)
-        .on_reply("order1")
-        .step()
-        .invoke_participant("CreateTicket", foo_fn)
-        .with_compensation("DeleteOrder", foo_fn)
-        .on_reply("order2", foo_fn)
-        .commit()
+        Saga("UpdateOrder").step().invoke_participant("AddOrder", foo_fn).on_reply("order1", finish_fn).commit()
     )

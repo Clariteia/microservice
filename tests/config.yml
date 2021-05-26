@@ -1,16 +1,16 @@
 service:
     name: Order
 rest:
-    host: localhost
-    port: 8080
+    host: 0.0.0.0
+    port: 8081
     endpoints:
-        - name: AddOrder
-          route: /order_microservice
+        - name: TestOrder
+          route: /orders
           method: POST
           controller: tests.order.RestService
           action: add_order
         - name: GetOrder
-          route: /order_microservice
+          route: /orders
           method: GET
           controller: tests.order.RestService
           action: get_order
@@ -72,7 +72,7 @@ saga:
     storage:
         path: "./order.lmdb"
     items:
-        - name: UpdateOrderReply
+        - name: UpdateOrder
           controller: tests.order.SagaService
           action: UPDATE_ORDER
     queue:
