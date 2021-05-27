@@ -11,7 +11,7 @@ import unittest
 from minos.common.testing import (
     PostgresAsyncTestCase,
 )
-from minos.template import (
+from minos.microservice import (
     EntrypointLauncher,
 )
 from tests.utils import (
