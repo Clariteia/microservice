@@ -1,10 +1,20 @@
+from typing import (
+    Optional,
+)
+
 import typer
-from typing import Optional
-from minos.microservice import EntrypointLauncher
-from minos.common import MinosConfig
+
+from minos.common import (
+    MinosConfig,
+)
+from minos.microservice import (
+    EntrypointLauncher,
+)
 
 app = typer.Typer()
-from pathlib import Path
+from pathlib import (
+    Path,
+)
 
 DEFAULT_CONF_PATH = "tests/config.yml"
 

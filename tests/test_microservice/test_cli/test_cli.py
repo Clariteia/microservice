@@ -1,7 +1,15 @@
 import unittest
-from typer.testing import CliRunner
-from minos.microservice.cli import app
-from tests.utils import BASE_PATH
+
+from typer.testing import (
+    CliRunner,
+)
+
+from minos.microservice.cli import (
+    app,
+)
+from tests.utils import (
+    BASE_PATH,
+)
 
 runner = CliRunner()
 
