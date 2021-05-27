@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = minos_microservice_template
+SPHINXPROJ    = minos_microservice
 SOURCEDIR     = .
 BUILDDIR      = _build
 

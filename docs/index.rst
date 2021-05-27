@@ -1,4 +1,4 @@
-Welcome to Minos Microservice Template's documentation!
+Welcome to Minos Microservice's documentation!
 ======================================
 
 .. toctree::
