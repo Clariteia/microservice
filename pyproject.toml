@@ -32,8 +32,8 @@ include = [
 [tool.poetry.dependencies]
 python = "^3.9"
 minos-microservice-common = "^0.0"
-minos-microservice-networks = { git = "git@github.com:Clariteia/minos_microservice_networks", rev = "2ff2c8baf9e6727bf1077b2e83842e513ef59f39" }
-minos-microservice-saga = { git = "git@github.com:Clariteia/minos_microservice_saga", rev = "eda8b5ebdc4b469a697eac3d64e8dd49df1a0e62" }
+minos-microservice-networks = { git = "git@github.com:Clariteia/minos_microservice_networks", rev = "c7e6208d4c3a0667e1cc58a519e69eb36c47c0d4" }
+minos-microservice-saga = { git = "git@github.com:Clariteia/minos_microservice_saga", rev = "f59ee0cc8790ace75a30f5ed15d46d9505256848" }
 cached-property = "^1.5.2"
 
 [tool.poetry.dev-dependencies]
