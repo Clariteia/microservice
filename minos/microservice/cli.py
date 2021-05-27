@@ -1,20 +1,12 @@
+import typer
+from typing import Optional
+from minos.microservice import EntrypointLauncher
+from minos.common import MinosConfig
+app = typer.Typer()
 from pathlib import (
     Path,
 )
-from typing import (
-    Optional,
-)
 
-import typer
-
-from minos.common import (
-    MinosConfig,
-)
-from minos.microservice import (
-    EntrypointLauncher,
-)
-
-app = typer.Typer()
 DEFAULT_CONF_PATH = "tests/config.yml"
 
 
@@ -24,7 +16,8 @@ def start_microservice(conf: Optional[str] = typer.Argument(DEFAULT_CONF_PATH)):
 
     try:
         config = MinosConfig(path=Path(conf))
-        EntrypointLauncher(config)
+        launcher = EntrypointLauncher(config)
+        #launcher.launch()
     except Exception as e:
         typer.echo(f"Error starting microservice: {str(e)}")
         raise typer.Exit(code=1)
@@ -37,5 +30,5 @@ def microservice_status():
     pass
 
 
-def main():  # pragma: no cover
+def main(): # pragma: no cover
     app()
