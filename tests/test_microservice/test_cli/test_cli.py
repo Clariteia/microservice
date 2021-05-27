@@ -17,4 +17,4 @@ class TestCli(unittest.TestCase):
         path = f"{BASE_PATH}/non_existing_config.yml"
         result = runner.invoke(app, ["start", path])
         self.assertEqual(result.exit_code, 1)
-        self.assertTrue('Error starting microservice' in result.stdout)
+        self.assertTrue("Error starting microservice" in result.stdout)
