@@ -1,4 +1,4 @@
-# Minos Microservice Template
+# Minos Microservice
 
 ## Description
 

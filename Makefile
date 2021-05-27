@@ -70,7 +70,7 @@ reformat: ## check code coverage quickly with the default Python
 	poetry run isort --recursive minos tests
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/minos_microservice_template.rst
+	rm -f docs/minos_microservice.rst
 	rm -f docs/modules.rst
 	poetry run sphinx-apidoc -o docs/api minos
 	poetry run $(MAKE) -C docs clean

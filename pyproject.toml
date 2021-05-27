@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "minos_microservice_template"
+name = "minos_microservice"
 version = "0.0.1"
 description = "Python package whose purpose is to connect and orchestrate the functionality among all the minos modules."
 readme = "README.md"
-repository = "https://github.com/clariteia/minos_microservice_template"
+repository = "https://github.com/clariteia/minos_microservice"
 homepage = "https://clariteia.com"
 authors = ["Clariteia Devs <devs@clariteia.com>"]
 license = "MIT"

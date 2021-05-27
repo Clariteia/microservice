@@ -2,6 +2,6 @@
 Usage
 =====
 
-To use Minos Microservice Template in a project::
+To use Minos Microservice in a project::
 
-    import minos_microservice_template
+    import minos_microservice
