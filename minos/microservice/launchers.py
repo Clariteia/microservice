@@ -60,27 +60,32 @@ class EntrypointLauncher(object):
 
         :return: This method does not return anything.
         """
-        with self.entrypoint as loop:
+        with self.entrypoint as loop:  # pragma: no cover
             loop.run_forever()
 
     @cached_property
     def entrypoint(self) -> Entrypoint:
-        """TODO
+        """Entrypoint instance.
 
-        :return: TODO
+        :return: An ``Entrypoint`` instance.
         """
 
         # noinspection PyUnusedLocal
         @receiver(entrypoint.PRE_START)
-        async def _fn(*args, **kwargs):
-            await self.inject()  # noqa
+        async def _start(*args, **kwargs):
+            await self.wire()
+
+        # noinspection PyUnusedLocal
+        @receiver(entrypoint.POST_STOP)
+        async def _stop(*args, **kwargs):
+            await self.unwire()
 
         return entrypoint(*self.services)
 
-    async def inject(self) -> NoReturn:
-        """TODO
+    async def wire(self) -> NoReturn:
+        """Wire the dependencies and setup it.
 
-        :return: TODO
+        :return: This method does not return anything.
         """
 
         from minos import (
@@ -91,11 +96,19 @@ class EntrypointLauncher(object):
 
         await self.injector.wire(modules=[common, networks, saga])
 
+        # FIXME: This should not be here.
         from tests.order.services.rest import (
             RestService,
         )
 
         RestService.saga_manager = self.injector.container.saga_manager()
+
+    async def unwire(self) -> NoReturn:
+        """Unwire the injected dependencies and destroys it.
+
+        :return: This method does not return anything.
+        """
+        await self.injector.unwire()
 
     @cached_property
     def injector(self) -> DependencyInjector:
