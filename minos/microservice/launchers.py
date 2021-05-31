@@ -13,7 +13,6 @@ from pathlib import (
     Path,
 )
 from typing import (
-    TYPE_CHECKING,
     NoReturn,
     Type,
     Union,
@@ -31,29 +30,49 @@ from cached_property import (
     cached_property,
 )
 
+from minos.common import (
+    MinosConfig,
+    MinosSetup,
+    PostgreSqlMinosRepository,
+)
+from minos.networks import (
+    CommandBroker,
+    CommandConsumerService,
+    CommandHandlerService,
+    CommandReplyBroker,
+    CommandReplyConsumerService,
+    CommandReplyHandlerService,
+    EventBroker,
+    EventConsumerService,
+    EventHandlerService,
+    ProducerService,
+    RestService,
+    SnapshotService,
+)
+from minos.saga import (
+    SagaManager,
+)
+
 from .injectors import (
     DependencyInjector,
 )
 
-if TYPE_CHECKING:
-    from minos.common import (
-        MinosConfig,
-    )
 
-
-class EntrypointLauncher(object):
+class EntrypointLauncher(MinosSetup):
     """EntryPoint Launcher class."""
 
-    def __init__(self, config: Union[MinosConfig, Path, str], interval: float = 0.1):
+    def __init__(self, config: Union[MinosConfig, Path, str], interval: float = 0.1, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         if isinstance(config, (str, Path)):
-            from minos.common import (
-                MinosConfig,
-            )
 
             config = MinosConfig(config)
 
         self.config = config
         self.interval = interval
+
+    @classmethod
+    def _from_config(cls, *args, config: MinosConfig, **kwargs) -> EntrypointLauncher:
+        return cls(*args, config=config, **kwargs)
 
     def launch(self) -> NoReturn:
         """Launch a new execution and keeps running forever..
@@ -73,16 +92,16 @@ class EntrypointLauncher(object):
         # noinspection PyUnusedLocal
         @receiver(entrypoint.PRE_START)
         async def _start(*args, **kwargs):
-            await self.wire()
+            await self.setup()
 
         # noinspection PyUnusedLocal
         @receiver(entrypoint.POST_STOP)
         async def _stop(*args, **kwargs):
-            await self.unwire()
+            await self.destroy()
 
         return entrypoint(*self.services)
 
-    async def wire(self) -> NoReturn:
+    async def _setup(self) -> NoReturn:
         """Wire the dependencies and setup it.
 
         :return: This method does not return anything.
@@ -103,7 +122,7 @@ class EntrypointLauncher(object):
 
         RestService.saga_manager = self.injector.container.saga_manager()
 
-    async def unwire(self) -> NoReturn:
+    async def _destroy(self) -> NoReturn:
         """Unwire the injected dependencies and destroys it.
 
         :return: This method does not return anything.
@@ -116,18 +135,6 @@ class EntrypointLauncher(object):
 
         :return: A ``DependencyInjector`` instance.
         """
-        from minos.common import (
-            PostgreSqlMinosRepository,
-        )
-        from minos.networks import (
-            CommandBroker,
-            CommandReplyBroker,
-            EventBroker,
-        )
-        from minos.saga import (
-            SagaManager,
-        )
-
         injector = DependencyInjector(
             config=self.config,
             command_broker_cls=CommandBroker,
@@ -149,18 +156,6 @@ class EntrypointLauncher(object):
 
     @property
     def _service_classes(self) -> list[Type[Service]]:
-        from minos.networks import (
-            CommandConsumerService,
-            CommandHandlerService,
-            CommandReplyConsumerService,
-            CommandReplyHandlerService,
-            EventConsumerService,
-            EventHandlerService,
-            ProducerService,
-            RestService,
-            SnapshotService,
-        )
-
         return [
             CommandConsumerService,
             CommandHandlerService,

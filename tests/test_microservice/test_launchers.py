@@ -21,6 +21,7 @@ from aiomisc.entrypoint import (
 
 from minos.common import (
     MinosConfig,
+    MinosConfigException,
 )
 from minos.common.testing import (
     PostgresAsyncTestCase,
@@ -61,18 +62,18 @@ class TestEntrypointLauncher(PostgresAsyncTestCase):
             pass
 
         mock = MagicMock(side_effect=_fn)
-        self.launcher.wire = mock
+        self.launcher.setup = mock
         self.launcher.__dict__["services"] = list()
-        self.launcher.unwire = mock
+        self.launcher.destroy = mock
         self.assertIsInstance(self.launcher.entrypoint, Entrypoint)
 
-    async def test_wire(self):
+    async def test_setup(self):
         async def _fn(*args, **kwargs):
             pass
 
         mock = MagicMock(side_effect=_fn)
         self.launcher.injector.wire = mock
-        await self.launcher.wire()
+        await self.launcher.setup()
 
         self.assertEqual(1, mock.call_count)
         from minos import (
@@ -83,13 +84,13 @@ class TestEntrypointLauncher(PostgresAsyncTestCase):
 
         self.assertEqual(call(modules=[common, networks, saga]), mock.call_args)
 
-    async def test_unwire(self):
+    async def test_destroy(self):
         async def _fn(*args, **kwargs):
             pass
 
         mock = MagicMock(side_effect=_fn)
         self.launcher.injector.unwire = mock
-        await self.launcher.unwire()
+        await self.launcher.destroy()
 
         self.assertEqual(1, mock.call_count)
         self.assertEqual(call(), mock.call_args)
@@ -99,12 +100,21 @@ class TestEntrypointLauncher(PostgresAsyncTestCase):
         self.launcher.launch()
 
 
-class TestEntrypointLauncherFromPath(unittest.TestCase):
+class TestEntrypointConstructor(unittest.TestCase):
     CONFIG_FILE_PATH = BASE_PATH / "config.yml"
 
-    def test_config(self) -> None:
+    def test_from_path(self) -> None:
         launcher = EntrypointLauncher(self.CONFIG_FILE_PATH)
         self.assertIsInstance(launcher.config, MinosConfig)
+
+    def test_from_config(self):
+        config = MinosConfig(BASE_PATH / "config.yml")
+        dispatcher = EntrypointLauncher.from_config(config=config)
+        self.assertIsInstance(dispatcher, EntrypointLauncher)
+
+    def test_from_config_raises(self):
+        with self.assertRaises(MinosConfigException):
+            EntrypointLauncher.from_config()
 
 
 if __name__ == "__main__":
