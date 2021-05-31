@@ -430,7 +430,7 @@ minos-microservice-common = "^0.0"
 
 [package.source]
 type = "git"
-url = "git@github.com:Clariteia/minos_microservice_networks"
+url = "https://github.com/Clariteia/minos_microservice_networks.git"
 reference = "be4877428c194edadb31a9e80893d91792b68a9f"
 resolved_reference = "be4877428c194edadb31a9e80893d91792b68a9f"
 
@@ -449,7 +449,7 @@ minos-microservice-common = "^0.0"
 
 [package.source]
 type = "git"
-url = "git@github.com:Clariteia/minos_microservice_saga"
+url = "https://github.com/Clariteia/minos_microservice_saga.git"
 reference = "dc6f2620120ba7370c9afdc4487df756e7b3cd8a"
 resolved_reference = "dc6f2620120ba7370c9afdc4487df756e7b3cd8a"
 
@@ -847,7 +847,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "2b6db0cfdbbbe531a5998ada41fd0286daca2b6053f575828f68c74369ed0ff5"
+content-hash = "a6dcbde534a95af5ead08abebde8f46e76a8d909a6436b8429c4f062fd58cbd9"
 
 [metadata.files]
 aiohttp = [

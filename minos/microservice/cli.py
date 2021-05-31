@@ -7,13 +7,6 @@ from typing import (
 
 import typer
 
-from minos.common import (
-    MinosConfig,
-)
-from minos.microservice import (
-    EntrypointLauncher,
-)
-
 app = typer.Typer()
 DEFAULT_CONF_PATH = "tests/config.yml"
 
@@ -21,6 +14,13 @@ DEFAULT_CONF_PATH = "tests/config.yml"
 @app.command("start")
 def start_microservice(conf: Optional[str] = typer.Argument(DEFAULT_CONF_PATH)):
     """Launch the microservice."""
+    from minos.common import (
+        MinosConfig,
+    )
+
+    from .launchers import (
+        EntrypointLauncher,
+    )
 
     try:
         config = MinosConfig(path=Path(conf))

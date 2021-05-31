@@ -5,50 +5,50 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+from __future__ import (
+    annotations,
+)
+
 import sys
-import typing as t
+from pathlib import (
+    Path,
+)
 from typing import (
+    TYPE_CHECKING,
     NoReturn,
+    Union,
 )
 
 from aiomisc import (
     Service,
     entrypoint,
+    receiver,
 )
 from cached_property import (
     cached_property,
-)
-
-from minos.common import (
-    PostgreSqlMinosRepository,
-)
-from minos.networks import (
-    CommandBroker,
-    CommandConsumerService,
-    CommandHandlerService,
-    CommandReplyBroker,
-    CommandReplyConsumerService,
-    CommandReplyHandlerService,
-    EventBroker,
-    EventConsumerService,
-    EventHandlerService,
-    ProducerService,
-    RestService,
-    SnapshotService,
-)
-from minos.saga import (
-    SagaManager,
 )
 
 from .injectors import (
     DependencyInjector,
 )
 
+if TYPE_CHECKING:
+    from minos.common import (
+        MinosConfig,
+    )
+
 
 class EntrypointLauncher(object):
     """EntryPoint Launcher class."""
 
-    def __init__(self, config, interval: float = 0.1):
+    def __init__(self, config: Union[MinosConfig, Path, str], interval: float = 0.1):
+        if isinstance(config, (str, Path)):
+            from minos.common import (
+                MinosConfig,
+            )
+
+            config = MinosConfig(config)
+
         self.config = config
         self.interval = interval
 
@@ -57,50 +57,13 @@ class EntrypointLauncher(object):
 
         :return: This method does not return anything.
         """
-        self._launch_services()
 
-    @cached_property
-    def _injector(self) -> DependencyInjector:
-        injector = DependencyInjector(
-            config=self.config,
-            command_broker_cls=CommandBroker,
-            command_reply_broker_cls=CommandReplyBroker,
-            event_broker_cls=EventBroker,
-            repository_cls=PostgreSqlMinosRepository,
-            saga_manager_cls=SagaManager,
-        )
-        return injector
+        @receiver(entrypoint.PRE_START)
+        async def _fn(*args, **kwargs):
+            await self._launch_injector()
 
-    def _launch_services(self):
         with entrypoint(*self._services) as loop:
             loop.run_forever()
-
-    @cached_property
-    def _services(self) -> list[Service]:
-        return [
-            LaunchService(self._injector),
-            CommandConsumerService(config=self.config, interval=self.interval),
-            CommandHandlerService(config=self.config, interval=self.interval),
-            CommandReplyConsumerService(config=self.config),
-            CommandReplyHandlerService(config=self.config, interval=self.interval),
-            EventConsumerService(config=self.config),
-            EventHandlerService(config=self.config, interval=self.interval),
-            RestService(config=self.config),
-            SnapshotService(config=self.config, interval=self.interval),
-            ProducerService(config=self.config, interval=self.interval),
-        ]
-
-
-class LaunchService(Service):
-    """TODO"""
-
-    def __init__(self, injector, **kwargs):
-        super().__init__(**kwargs)
-        self._injector = injector
-
-    async def start(self) -> t.Any:
-        """TODO"""
-        await self._launch_injector()
 
     async def _launch_injector(self):
         await self._injector.wire(modules=[sys.modules[__name__]])
@@ -126,3 +89,53 @@ class LaunchService(Service):
         )
 
         RestService.saga_manager = self._injector.container.saga_manager()
+
+    @cached_property
+    def _injector(self) -> DependencyInjector:
+        from minos.common import (
+            PostgreSqlMinosRepository,
+        )
+        from minos.networks import (
+            CommandBroker,
+            CommandReplyBroker,
+            EventBroker,
+        )
+        from minos.saga import (
+            SagaManager,
+        )
+
+        injector = DependencyInjector(
+            config=self.config,
+            command_broker_cls=CommandBroker,
+            command_reply_broker_cls=CommandReplyBroker,
+            event_broker_cls=EventBroker,
+            repository_cls=PostgreSqlMinosRepository,
+            saga_manager_cls=SagaManager,
+        )
+        return injector
+
+    @cached_property
+    def _services(self) -> list[Service]:
+        from minos.networks import (
+            CommandConsumerService,
+            CommandHandlerService,
+            CommandReplyConsumerService,
+            CommandReplyHandlerService,
+            EventConsumerService,
+            EventHandlerService,
+            ProducerService,
+            RestService,
+            SnapshotService,
+        )
+
+        return [
+            CommandConsumerService(config=self.config, interval=self.interval),
+            CommandHandlerService(config=self.config, interval=self.interval),
+            CommandReplyConsumerService(config=self.config),
+            CommandReplyHandlerService(config=self.config, interval=self.interval),
+            EventConsumerService(config=self.config),
+            EventHandlerService(config=self.config, interval=self.interval),
+            RestService(config=self.config),
+            SnapshotService(config=self.config, interval=self.interval),
+            ProducerService(config=self.config, interval=self.interval),
+        ]
