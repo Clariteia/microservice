@@ -9,13 +9,13 @@ from __future__ import (
     annotations,
 )
 
-import sys
 from pathlib import (
     Path,
 )
 from typing import (
     TYPE_CHECKING,
     NoReturn,
+    Type,
     Union,
 )
 
@@ -58,40 +58,35 @@ class EntrypointLauncher(object):
         :return: This method does not return anything.
         """
 
+        # noinspection PyUnusedLocal
         @receiver(entrypoint.PRE_START)
         async def _fn(*args, **kwargs):
             await self._launch_injector()
 
-        with entrypoint(*self._services) as loop:
+        with entrypoint(*self.services) as loop:
             loop.run_forever()
 
     async def _launch_injector(self):
-        await self._injector.wire(modules=[sys.modules[__name__]])
-
-        from minos.common import (
-            Aggregate,
-        )
-        from minos.networks import (
-            CommandHandler,
-            CommandReplyHandler,
-        )
-        from minos.saga import (
-            PublishExecutor,
+        from minos import (
+            common,
+            networks,
+            saga,
         )
 
-        CommandReplyHandler.saga_manager = self._injector.container.saga_manager()
-        CommandHandler.broker = self._injector.container.command_reply_broker()
-        PublishExecutor.broker = self._injector.container.command_broker()
-        Aggregate._repository = self._injector.container.repository()
+        await self.injector.wire(modules=[common, networks, saga])
 
         from tests.order.services.rest import (
             RestService,
         )
 
-        RestService.saga_manager = self._injector.container.saga_manager()
+        RestService.saga_manager = self.injector.container.saga_manager()
 
     @cached_property
-    def _injector(self) -> DependencyInjector:
+    def injector(self) -> DependencyInjector:
+        """Dependency injector instance.
+
+        :return: A ``DependencyInjector`` instance.
+        """
         from minos.common import (
             PostgreSqlMinosRepository,
         )
@@ -115,7 +110,16 @@ class EntrypointLauncher(object):
         return injector
 
     @cached_property
-    def _services(self) -> list[Service]:
+    def services(self) -> list[Service]:
+        """List of services to be launched.
+
+        :return: A list of ``Service`` instances.
+        """
+        kwargs = {"config": self.config, "interval": self.interval}
+        return [cls(**kwargs) for cls in self._service_classes]
+
+    @property
+    def _service_classes(self) -> list[Type[Service]]:
         from minos.networks import (
             CommandConsumerService,
             CommandHandlerService,
@@ -129,13 +133,13 @@ class EntrypointLauncher(object):
         )
 
         return [
-            CommandConsumerService(config=self.config, interval=self.interval),
-            CommandHandlerService(config=self.config, interval=self.interval),
-            CommandReplyConsumerService(config=self.config),
-            CommandReplyHandlerService(config=self.config, interval=self.interval),
-            EventConsumerService(config=self.config),
-            EventHandlerService(config=self.config, interval=self.interval),
-            RestService(config=self.config),
-            SnapshotService(config=self.config, interval=self.interval),
-            ProducerService(config=self.config, interval=self.interval),
+            CommandConsumerService,
+            CommandHandlerService,
+            CommandReplyConsumerService,
+            CommandReplyHandlerService,
+            EventConsumerService,
+            EventHandlerService,
+            RestService,
+            SnapshotService,
+            ProducerService,
         ]
