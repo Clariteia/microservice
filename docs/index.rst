@@ -1,4 +1,4 @@
-Welcome to Minos Microservice Common's documentation!
+Welcome to Minos Microservice's documentation!
 =======================================================
 
 .. toctree::
