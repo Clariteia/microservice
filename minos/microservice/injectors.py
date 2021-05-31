@@ -11,7 +11,10 @@ from __future__ import (
 )
 
 from typing import (
+    TYPE_CHECKING,
     NoReturn,
+    Optional,
+    Type,
 )
 
 from cached_property import (
@@ -22,18 +25,26 @@ from dependency_injector import (
     providers,
 )
 
+if TYPE_CHECKING:
+    from minos.common import (
+        MinosBroker,
+        MinosConfig,
+        MinosRepository,
+        MinosSagaManager,
+    )
+
 
 class DependencyInjector(object):
     """Wrapper class for ``dependency_injector.containers.Container``. """
 
     def __init__(
         self,
-        config,
-        repository_cls=None,
-        event_broker_cls=None,
-        command_broker_cls=None,
-        command_reply_broker_cls=None,
-        saga_manager_cls=None,
+        config: MinosConfig,
+        repository_cls: Optional[Type[MinosRepository]] = None,
+        event_broker_cls: Optional[Type[MinosBroker]] = None,
+        command_broker_cls: Optional[Type[MinosBroker]] = None,
+        command_reply_broker_cls: Optional[Type[MinosBroker]] = None,
+        saga_manager_cls: Optional[Type[MinosSagaManager]] = None,
     ):
         self.config = config
         self.repository_cls = repository_cls
