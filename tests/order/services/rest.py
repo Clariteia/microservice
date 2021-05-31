@@ -17,9 +17,9 @@ from minos.saga import (
 class RestService(object):
     saga_manager: SagaManager
 
-    async def add_order(self, request):
+    async def add_order(self, request, **kwargs):
         uuid = await self.saga_manager.run("UpdateOrder")
         return web.Response(text=f"Order added: {uuid!r}")
 
-    async def get_order(self, request):
+    async def get_order(self, request, **kwargs):
         return web.Response(text="Order get")
