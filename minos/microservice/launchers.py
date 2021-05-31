@@ -24,6 +24,9 @@ from aiomisc import (
     entrypoint,
     receiver,
 )
+from aiomisc.entrypoint import (
+    Entrypoint,
+)
 from cached_property import (
     cached_property,
 )
@@ -57,16 +60,29 @@ class EntrypointLauncher(object):
 
         :return: This method does not return anything.
         """
+        with self.entrypoint as loop:
+            loop.run_forever()
+
+    @cached_property
+    def entrypoint(self) -> Entrypoint:
+        """TODO
+
+        :return: TODO
+        """
 
         # noinspection PyUnusedLocal
         @receiver(entrypoint.PRE_START)
         async def _fn(*args, **kwargs):
-            await self._launch_injector()
+            await self.inject()  # noqa
 
-        with entrypoint(*self.services) as loop:
-            loop.run_forever()
+        return entrypoint(*self.services)
 
-    async def _launch_injector(self):
+    async def inject(self) -> NoReturn:
+        """TODO
+
+        :return: TODO
+        """
+
         from minos import (
             common,
             networks,

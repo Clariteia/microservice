@@ -12,6 +12,9 @@ from aiomisc import (
     Service,
 )
 
+from minos.common import (
+    MinosConfig,
+)
 from minos.common.testing import (
     PostgresAsyncTestCase,
 )
@@ -49,6 +52,14 @@ class TestEntrypointLauncher(PostgresAsyncTestCase):
     @unittest.skip
     def test_launch(self):
         self.launcher.launch()
+
+
+class TestEntrypointLauncherFromPath(unittest.TestCase):
+    CONFIG_FILE_PATH = BASE_PATH / "config.yml"
+
+    def test_config(self) -> None:
+        launcher = EntrypointLauncher(self.CONFIG_FILE_PATH)
+        self.assertIsInstance(launcher.config, MinosConfig)
 
 
 if __name__ == "__main__":
