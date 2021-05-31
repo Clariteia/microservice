@@ -10,8 +10,7 @@ import typer
 from minos.common import (
     MinosConfig,
 )
-
-from .launchers import (
+from minos.microservice import (
     EntrypointLauncher,
 )
 
