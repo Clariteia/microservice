@@ -35,6 +35,7 @@ minos-microservice-common = "^0.0"
 minos-microservice-networks = { git = "git@github.com:Clariteia/minos_microservice_networks", rev = "86dad90b360ba609fec43c1a87dd24b2c6f6caa6" }
 minos-microservice-saga = { git = "git@github.com:Clariteia/minos_microservice_saga", rev = "3c5e80c0cc1b62b612ddd981e32fedd6c331588b" }
 cached-property = "^1.5.2"
+typer = "^0.3.2"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b"
@@ -48,3 +49,6 @@ pre-commit = "^2.12.1"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+microservice = "minos.microservice.cli:main"
