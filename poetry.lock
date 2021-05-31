@@ -413,45 +413,31 @@ PyYAML = ">=5.4.1,<6.0.0"
 
 [[package]]
 name = "minos-microservice-networks"
-version = "0.0.4"
+version = "0.0.5"
 description = "Python Package with the common network classes and utilities used in Minos Microservice."
 category = "main"
 optional = false
-python-versions = "^3.9"
-develop = false
+python-versions = ">=3.9,<4.0"
 
 [package.dependencies]
-aiohttp = "^3.7.4"
-aiokafka = "^0.7.0"
-aiomisc = "^14.0.3"
-aiopg = "^1.2.1"
-dependency-injector = "^4.32.2"
-minos-microservice-common = "^0.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/Clariteia/minos_microservice_networks.git"
-reference = "be4877428c194edadb31a9e80893d91792b68a9f"
-resolved_reference = "be4877428c194edadb31a9e80893d91792b68a9f"
+aiohttp = ">=3.7.4,<4.0.0"
+aiokafka = ">=0.7.0,<0.8.0"
+aiomisc = ">=14.0.3,<15.0.0"
+aiopg = ">=1.2.1,<2.0.0"
+dependency-injector = ">=4.32.2,<5.0.0"
+minos-microservice-common = ">=0.0,<0.1"
 
 [[package]]
 name = "minos-microservice-saga"
-version = "0.0.3"
+version = "0.0.4"
 description = "Saga Library for MinOS project."
 category = "main"
 optional = false
-python-versions = "^3.9"
-develop = false
+python-versions = ">=3.9,<4.0"
 
 [package.dependencies]
-dependency-injector = "^4.32.2"
-minos-microservice-common = "^0.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/Clariteia/minos_microservice_saga.git"
-reference = "dc6f2620120ba7370c9afdc4487df756e7b3cd8a"
-resolved_reference = "dc6f2620120ba7370c9afdc4487df756e7b3cd8a"
+dependency-injector = ">=4.32.2,<5.0.0"
+minos-microservice-common = ">=0.0,<0.1"
 
 [[package]]
 name = "multidict"
@@ -847,7 +833,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "a6dcbde534a95af5ead08abebde8f46e76a8d909a6436b8429c4f062fd58cbd9"
+content-hash = "16861693386fa5aef8715a43aaba9a0edfd227da822b49c96d7a32c3bae46c71"
 
 [metadata.files]
 aiohttp = [
@@ -1281,8 +1267,14 @@ minos-microservice-common = [
     {file = "minos_microservice_common-0.0.16-py3-none-any.whl", hash = "sha256:aa220b0bcd4e77a1f294a7039f3ecc1a592330effce2dd2fa02ea550a1624b33"},
     {file = "minos_microservice_common-0.0.16.tar.gz", hash = "sha256:8f17bca774ef1553d29893883930e4fc0b266f0c165a4c1520a617d0a1653f00"},
 ]
-minos-microservice-networks = []
-minos-microservice-saga = []
+minos-microservice-networks = [
+    {file = "minos_microservice_networks-0.0.5-py3-none-any.whl", hash = "sha256:b1ab852b4e0f2152d79cd8d0939d0044d46d1827803614454a64e623d45d05d1"},
+    {file = "minos_microservice_networks-0.0.5.tar.gz", hash = "sha256:c56e21ce2c8ff07e97cca2b20d86bdbe25a2943bfa5235e32814219f9faa9c87"},
+]
+minos-microservice-saga = [
+    {file = "minos_microservice_saga-0.0.4-py3-none-any.whl", hash = "sha256:1e0348a99fea959affa5386e1f5a85594454aad782b60e1267f8a185fb209c0a"},
+    {file = "minos_microservice_saga-0.0.4.tar.gz", hash = "sha256:edbc17cd5e80012bff2940f3591d9a2cad9024a11037f0b1fe4cc0f54837a136"},
+]
 multidict = [
     {file = "multidict-5.1.0-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:b7993704f1a4b204e71debe6095150d43b2ee6150fa4f44d6d966ec356a8d61f"},
     {file = "multidict-5.1.0-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:9dd6e9b1a913d096ac95d0399bd737e00f2af1e1594a787e00f7975778c8b2bf"},
