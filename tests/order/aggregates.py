@@ -5,13 +5,14 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
+
 from minos.common import (
-    MinosConfig,
+    Aggregate,
 )
 
 
-class EntrypointLauncher(object):
-    """TODO"""
+class Order(Aggregate):
+    """Aggregate ``Order`` class for testing purposes."""
 
-    def __init__(self, config: MinosConfig):
-        self.config = config
+    product: str
+    amount: int
