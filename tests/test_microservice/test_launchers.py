@@ -78,11 +78,12 @@ class TestEntrypointLauncher(PostgresAsyncTestCase):
         self.assertEqual(1, mock.call_count)
         from minos import (
             common,
+            microservice,
             networks,
             saga,
         )
 
-        self.assertEqual(call(modules=[common, networks, saga]), mock.call_args)
+        self.assertEqual(call(modules=[common, networks, saga, microservice]), mock.call_args)
 
     async def test_destroy(self):
         async def _fn(*args, **kwargs):

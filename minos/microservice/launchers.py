@@ -109,18 +109,12 @@ class EntrypointLauncher(MinosSetup):
 
         from minos import (
             common,
+            microservice,
             networks,
             saga,
         )
 
-        await self.injector.wire(modules=[common, networks, saga])
-
-        # FIXME: This should not be here.
-        from tests.order.services.rest import (
-            RestService,
-        )
-
-        RestService.saga_manager = self.injector.container.saga_manager()
+        await self.injector.wire(modules=[common, networks, saga, microservice])
 
     async def _destroy(self) -> NoReturn:
         """Unwire the injected dependencies and destroys it.

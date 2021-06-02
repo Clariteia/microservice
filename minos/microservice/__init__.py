@@ -16,3 +16,6 @@ from .injectors import (
 from .launchers import (
     EntrypointLauncher,
 )
+from .services import (
+    Service,
+)
