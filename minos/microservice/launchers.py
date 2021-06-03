@@ -9,6 +9,7 @@ from __future__ import (
     annotations,
 )
 
+import logging
 from pathlib import (
     Path,
 )
@@ -57,6 +58,8 @@ from .injectors import (
     DependencyInjector,
 )
 
+logger = logging.getLogger(__name__)
+
 
 class EntrypointLauncher(MinosSetup):
     """EntryPoint Launcher class."""
@@ -79,7 +82,9 @@ class EntrypointLauncher(MinosSetup):
 
         :return: This method does not return anything.
         """
+        logger.info("Starting microservice...")
         with self.entrypoint as loop:  # pragma: no cover
+            logger.info("Microservice is up and running!")
             loop.run_forever()
 
     @cached_property

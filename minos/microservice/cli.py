@@ -1,3 +1,10 @@
+"""
+Copyright (C) 2021 Clariteia SL
+
+This file is part of minos framework.
+
+Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
+"""
 from pathlib import (
     Path,
 )
@@ -10,32 +17,46 @@ import typer
 from minos.common import (
     MinosConfig,
 )
-from minos.microservice import (
+
+from .constants import (
+    DEFAULT_CONFIGURATION_FILE_PATH,
+)
+from .launchers import (
     EntrypointLauncher,
 )
 
 app = typer.Typer()
-DEFAULT_CONF_PATH = "tests/config.yml"
 
 
 @app.command("start")
-def start_microservice(conf: Optional[str] = typer.Argument(DEFAULT_CONF_PATH)):
-    """Launch the microservice."""
+def start(
+    file_path: Optional[Path] = typer.Argument(DEFAULT_CONFIGURATION_FILE_PATH, help="Microservice configuration file.")
+):
+    """Start the microservice."""
 
     try:
-        config = MinosConfig(path=Path(conf))
-        EntrypointLauncher(config)
-    except Exception as e:
-        typer.echo(f"Error starting microservice: {str(e)}")
+        config = MinosConfig(file_path)
+    except Exception as exc:
+        typer.echo(f"Error loading config: {exc!r}")
+        raise typer.Exit(code=1)
+
+    launcher = EntrypointLauncher(config)
+    try:
+        launcher.launch()
+    except Exception as exc:
+        typer.echo(f"Error launching microservice: {exc!r}")
         raise typer.Exit(code=1)
 
     typer.echo("Microservice is up and running!\n")
 
 
 @app.command("status")
-def microservice_status():
-    pass
+def status():
+    """Get the microservice status."""
+    raise NotImplementedError
 
 
-def main():  # pragma: no cover
-    app()
+@app.command("stop")
+def stop():
+    """Stop the microservice."""
+    raise NotImplementedError
