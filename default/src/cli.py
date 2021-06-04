@@ -19,18 +19,22 @@ from minos.common import (
     EntrypointLauncher,
 )
 
-from .constants import (
-    DEFAULT_CONFIGURATION_FILE_PATH,
-)
-
 app = typer.Typer()
 
 
 @app.command("start")
 def start(
-    file_path: Optional[Path] = typer.Argument(DEFAULT_CONFIGURATION_FILE_PATH, help="Microservice configuration file.")
+        file_path: Optional[Path] = typer.Argument(
+            "config.yml", help="Microservice configuration file.", envvar="MINOS_CONFIGURATION_FILE_PATH"
+        )
 ):
     """Start the microservice."""
+
+    try:
+        from config import injections, services
+    except Exception as exc:
+        typer.echo(f"Error loading config: {exc!r}")
+        raise typer.Exit(code=1)
 
     try:
         config = MinosConfig(file_path)
@@ -38,14 +42,7 @@ def start(
         typer.echo(f"Error loading config: {exc!r}")
         raise typer.Exit(code=1)
 
-    try:
-        # noinspection PyUnresolvedReferences
-        from run import injector, services
-    except Exception as exc:
-        typer.echo(f"Error loading config: {exc!r}")
-        raise typer.Exit(code=1)
-
-    launcher = EntrypointLauncher(injector=injector, services=services)
+    launcher = EntrypointLauncher(config=config, injections=injections, services=services)
     try:
         launcher.launch()
     except Exception as exc:
@@ -65,3 +62,8 @@ def status():
 def stop():
     """Stop the microservice."""
     raise NotImplementedError
+
+
+def main():  # pragma: no cover
+    """CLI's main function."""
+    app()
