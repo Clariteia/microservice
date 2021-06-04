@@ -30,7 +30,7 @@ class FooService(Service):
         """
         return await Foo.create(bar)
 
-    def update_foo(self, ids: list[int]) -> UUID:
+    async def update_foo(self, ids: list[int]) -> UUID:
         """
 
         :return:

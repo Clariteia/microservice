@@ -6,22 +6,22 @@ rest:
     endpoints:
         -   route: /foos
             method: POST
-            controller: src.DefaultController
+            controller: src.FooController
             action: create_foo
             name: ""
         -   route: /foos
             method: GET
-            controller: src.DefaultController
+            controller: src.FooController
             action: get_foos
             name: ""
 repository:
-    database: default_db
+    database: foo_db
     user: minos
     password: min0s
     host: localhost
     port: 5432
 snapshot:
-    database: default_db
+    database: foo_db
     user: minos
     password: min0s
     host: localhost
@@ -30,7 +30,7 @@ events:
     broker: localhost
     port: 9092
     queue:
-        database: default_db
+        database: foo_db
         user: minos
         password: min0s
         host: localhost
@@ -43,13 +43,13 @@ commands:
     port: 9092
     items:
         -   name: CreateFoo
-            controller: src.DefaultController
+            controller: src.FooController
             action: create_foo
         -   name: Getfoos
-            controller: src.DefaultController
+            controller: src.FooController
             action: get_foos
     queue:
-        database: product_db
+        database: foo_db
         user: minos
         password: min0s
         host: localhost
@@ -60,13 +60,13 @@ saga:
     broker: localhost
     port: 9092
     storage:
-        path: "./product.lmdb"
+        path: "./foo.lmdb"
     items:
         -   name: UpdateFoo
             controller: src.sagas
             action: UPDATE_FOO
     queue:
-        database: default_db
+        database: foo_db
         user: minos
         password: min0s
         host: localhost

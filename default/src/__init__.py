@@ -18,3 +18,6 @@ from .services import (
 from .controllers import (
     FooController,
 )
+from .sagas import (
+    UPDATE_FOO,
+)
