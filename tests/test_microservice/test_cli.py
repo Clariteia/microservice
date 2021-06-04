@@ -1,18 +1,10 @@
 import unittest
-from unittest.mock import (
-    patch,
-)
+from unittest.mock import patch
 
-from typer.testing import (
-    CliRunner,
-)
+from typer.testing import CliRunner
 
-from minos.microservice import (
-    cli_app,
-)
-from tests.utils import (
-    BASE_PATH,
-)
+from minos.microservice import cli_app
+from tests.utils import BASE_PATH
 
 runner = CliRunner()
 
