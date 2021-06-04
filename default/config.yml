@@ -1,27 +1,27 @@
 service:
-    name: Product
+    name: Default
 rest:
     host: 0.0.0.0
     port: 8081
     endpoints:
-        -   route: /products
+        -   route: /foos
             method: POST
-            controller: src.ProductController
-            action: create_product
+            controller: src.DefaultController
+            action: create_foo
             name: ""
-        -   route: /products
+        -   route: /foos
             method: GET
-            controller: src.ProductController
-            action: get_products
+            controller: src.DefaultController
+            action: get_foos
             name: ""
 repository:
-    database: product_db
+    database: default_db
     user: minos
     password: min0s
     host: localhost
     port: 5432
 snapshot:
-    database: product_db
+    database: default_db
     user: minos
     password: min0s
     host: localhost
@@ -30,24 +30,24 @@ events:
     broker: localhost
     port: 9092
     queue:
-        database: product_db
+        database: default_db
         user: minos
         password: min0s
         host: localhost
         port: 5432
         records: 10
         retry: 2
-    items: []
+    items: [ ]
 commands:
     broker: localhost
     port: 9092
     items:
-        -   name: CreateProduct
-            controller: src.ProductController
-            action: create_product
-        -   name: GetProducts
-            controller: src.ProductController
-            action: get_products
+        -   name: CreateFoo
+            controller: src.DefaultController
+            action: create_foo
+        -   name: Getfoos
+            controller: src.DefaultController
+            action: get_foos
     queue:
         database: product_db
         user: minos
@@ -61,9 +61,12 @@ saga:
     port: 9092
     storage:
         path: "./product.lmdb"
-    items: []
+    items:
+        -   name: UpdateFoo
+            controller: src.sagas
+            action: UPDATE_FOO
     queue:
-        database: product_db
+        database: default_db
         user: minos
         password: min0s
         host: localhost
