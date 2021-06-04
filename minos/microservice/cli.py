@@ -5,17 +5,23 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from pathlib import Path
-from typing import Optional
+from pathlib import (
+    Path,
+)
+from typing import (
+    Optional,
+)
 
 import typer
 
 from minos.common import (
-    MinosConfig,
     EntrypointLauncher,
+    MinosConfig,
 )
 
-from .constants import DEFAULT_CONFIGURATION_FILE_PATH
+from .constants import (
+    DEFAULT_CONFIGURATION_FILE_PATH,
+)
 
 app = typer.Typer()
 
@@ -34,7 +40,10 @@ def start(
 
     try:
         # noinspection PyUnresolvedReferences
-        from run import injector, services
+        from run import (
+            injector,
+            services,
+        )
     except Exception as exc:
         typer.echo(f"Error loading config: {exc!r}")
         raise typer.Exit(code=1)
