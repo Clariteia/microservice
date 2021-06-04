@@ -5,17 +5,19 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-
 __author__ = """Clariteia Devs"""
 __email__ = "devs@clariteia.com"
 __version__ = "0.0.1-alpha"
 
-from .injectors import (
-    DependencyInjector,
+from .aggregates import (
+    Foo,
 )
-from .launchers import (
-    EntrypointLauncher,
+from .controllers import (
+    FooController,
+)
+from .sagas import (
+    UPDATE_FOO,
 )
 from .services import (
-    Service,
+    FooService,
 )

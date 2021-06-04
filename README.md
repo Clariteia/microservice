@@ -7,56 +7,6 @@ Minos is a framework which helps you create [reactive](https://www.reactivemanif
 Internally, it leverages Event Sourcing, CQRS and a message driven architecture to fulfil the commitments of an
 asynchronous environment.
 
-## Documentation
-
-The official documentation as well as the API you can find it under https://clariteia.github.io/microservice/. 
-Please, submit any issue regarding documentation as well!
-
-## Set up a development environment
-
-Minos uses `poetry` as its default package manager. Please refer to the
-[Poetry installation guide](https://python-poetry.org/docs/#installation) for instructions on how to install it.
-
-Now you con install all the dependencies by running
-```bash
-make install
-```
-
-In order to make the pre-commits checks available to git, run
-```bash
-pre-commit install
-```
-
-Make yourself sure you are able to run the tests. Refer to the appropriate section in this guide.
-
-## Run the tests
-
-In order to run the tests, please make sure you have the [Docker Engine](https://docs.docker.com/engine/install/)
-and [Docker Compose](https://docs.docker.com/compose/install/) installed.
-
-Move into `tests/` directory
-
-```bash
-cd tests/
-```
-Run service dependencies:
-
-```bash
-docker-compose up -d
-```
-
-Install library dependencies:
-
-```bash
-make install
-```
-
-Run tests:
-
-```bash
-make test
-```
-
 ## How to contribute
 
 Minos being an open-source project, we are looking forward to having your contributions. No matter whether it is a pull

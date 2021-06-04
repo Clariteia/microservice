@@ -1,0 +1,75 @@
+service:
+    name: Default
+rest:
+    host: 0.0.0.0
+    port: 8081
+    endpoints:
+        -   route: /foos
+            method: POST
+            controller: src.FooController
+            action: create_foo
+            name: ""
+        -   route: /foos
+            method: GET
+            controller: src.FooController
+            action: get_foos
+            name: ""
+repository:
+    database: foo_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+snapshot:
+    database: foo_db
+    user: minos
+    password: min0s
+    host: localhost
+    port: 5432
+events:
+    broker: localhost
+    port: 9092
+    queue:
+        database: foo_db
+        user: minos
+        password: min0s
+        host: localhost
+        port: 5432
+        records: 10
+        retry: 2
+    items: [ ]
+commands:
+    broker: localhost
+    port: 9092
+    items:
+        -   name: CreateFoo
+            controller: src.FooController
+            action: create_foo
+        -   name: Getfoos
+            controller: src.FooController
+            action: get_foos
+    queue:
+        database: foo_db
+        user: minos
+        password: min0s
+        host: localhost
+        port: 5432
+        records: 10
+        retry: 2
+saga:
+    broker: localhost
+    port: 9092
+    storage:
+        path: "./foo.lmdb"
+    items:
+        -   name: UpdateFoo
+            controller: src.sagas
+            action: UPDATE_FOO
+    queue:
+        database: foo_db
+        user: minos
+        password: min0s
+        host: localhost
+        port: 5432
+        records: 10
+        retry: 2

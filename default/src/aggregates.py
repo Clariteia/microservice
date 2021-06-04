@@ -5,15 +5,12 @@ This file is part of minos framework.
 
 Minos framework can not be copied and/or distributed without the express permission of Clariteia SL.
 """
-from .command import (
-    CommandService,
+from minos.common import (
+    Aggregate,
 )
-from .cqrs import (
-    CqrsService,
-)
-from .rest import (
-    RestService,
-)
-from .saga import (
-    SagaService,
-)
+
+
+class Foo(Aggregate):
+    """TODO"""
+
+    bar: str
