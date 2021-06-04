@@ -9,15 +9,7 @@ __author__ = """Clariteia Devs"""
 __email__ = "devs@clariteia.com"
 __version__ = "0.0.1-alpha"
 
-from .aggregates import (
-    Foo,
-)
-from .controllers import (
-    FooController,
-)
-from .sagas import (
-    UPDATE_FOO,
-)
-from .services import (
-    FooService,
-)
+from .aggregates import Foo
+from .controllers import FooController
+from .sagas import UPDATE_FOO
+from .services import FooService
