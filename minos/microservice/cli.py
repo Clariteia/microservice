@@ -16,13 +16,11 @@ import typer
 
 from minos.common import (
     MinosConfig,
+    EntrypointLauncher,
 )
 
 from .constants import (
     DEFAULT_CONFIGURATION_FILE_PATH,
-)
-from .launchers import (
-    EntrypointLauncher,
 )
 
 app = typer.Typer()
@@ -40,7 +38,14 @@ def start(
         typer.echo(f"Error loading config: {exc!r}")
         raise typer.Exit(code=1)
 
-    launcher = EntrypointLauncher(config)
+    try:
+        # noinspection PyUnresolvedReferences
+        from run import injector, services
+    except Exception as exc:
+        typer.echo(f"Error loading config: {exc!r}")
+        raise typer.Exit(code=1)
+
+    launcher = EntrypointLauncher(injector=injector, services=services)
     try:
         launcher.launch()
     except Exception as exc:
