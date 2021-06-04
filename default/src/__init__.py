@@ -12,12 +12,12 @@ __version__ = "0.0.1-alpha"
 from .aggregates import (
     Foo,
 )
-from .services import (
-    FooService,
-)
 from .controllers import (
     FooController,
 )
 from .sagas import (
     UPDATE_FOO,
+)
+from .services import (
+    FooService,
 )

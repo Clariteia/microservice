@@ -12,15 +12,18 @@ from minos.common import (
 
 class FooDto(MinosModel):
     """TODO"""
+
     id: int
     bar: str
 
 
 class FoosQueryDto(MinosModel):
     """TODO"""
+
     ids: list[int]
 
 
 class BarsQueryDto(MinosModel):
     """TODO"""
+
     ids: list[int]

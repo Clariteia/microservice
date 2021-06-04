@@ -17,10 +17,4 @@ def prepare_get_bars(context: SagaContext):
     return context["bars_query"]
 
 
-UPDATE_FOO = (
-    Saga("UpdateFoo")
-    .step()
-    .invoke_participant("GetBars", prepare_get_bars)
-    .on_reply("bars")
-    .commit()
-)
+UPDATE_FOO = Saga("UpdateFoo").step().invoke_participant("GetBars", prepare_get_bars).on_reply("bars").commit()

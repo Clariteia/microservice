@@ -13,10 +13,9 @@ from typing import (
 )
 
 import typer
-
 from minos.common import (
-    MinosConfig,
     EntrypointLauncher,
+    MinosConfig,
 )
 
 app = typer.Typer()
@@ -24,14 +23,17 @@ app = typer.Typer()
 
 @app.command("start")
 def start(
-        file_path: Optional[Path] = typer.Argument(
-            "config.yml", help="Microservice configuration file.", envvar="MINOS_CONFIGURATION_FILE_PATH"
-        )
+    file_path: Optional[Path] = typer.Argument(
+        "config.yml", help="Microservice configuration file.", envvar="MINOS_CONFIGURATION_FILE_PATH"
+    )
 ):
     """Start the microservice."""
 
     try:
-        from config import injections, services
+        from config import (
+            injections,
+            services,
+        )
     except Exception as exc:
         typer.echo(f"Error loading config: {exc!r}")
         raise typer.Exit(code=1)
