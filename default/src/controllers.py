@@ -15,7 +15,9 @@ from .dto import (
     FooDto,
     FoosQueryDto,
 )
-from .services import FooService
+from .services import (
+    FooService,
+)
 
 
 class FooController:
