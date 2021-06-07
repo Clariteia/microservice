@@ -11,6 +11,6 @@ from minos.common import (
 
 
 class Foo(Aggregate):
-    """TODO"""
+    """The foo aggregate."""
 
     bar: str

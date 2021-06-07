@@ -25,10 +25,10 @@ class FooController:
 
     @staticmethod
     async def create_foo(request: Request) -> Response:
-        """TODO
+        """Create a foo instance from a request.
 
-        :param request:TODO
-        :return: TODO
+        :param request: The request object to create a new instance.
+        :return: A ``Response`` instance.
         """
         content = await request.content()
         foo = await FooService().create_foo(**content[0])
@@ -36,10 +36,10 @@ class FooController:
 
     @staticmethod
     async def get_foos(request: Request) -> Response:
-        """TODO
+        """Get foos from a request.
 
-        :param request: TODO
-        :return: TODO
+        :param request: The request containing the foo´s identifiers.
+        :return: A response containing the ``Foo`` instances.
         """
         content = await request.content()
         if len(content) and isinstance(content[0], FoosQueryDto):

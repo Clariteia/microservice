@@ -28,18 +28,18 @@ class FooService(Service):
     """Ticket Service class"""
 
     @staticmethod
-    async def create_foo(bar) -> Foo:
-        """TODO.
+    async def create_foo(bar: str) -> Foo:
+        """Creates a foo instance.
 
-        :param bar: TODO
-        :return: TODO
+        :param bar: bar field to be set to the foo instance.
+        :return: The created ``Foo`` instance.
         """
         return await Foo.create(bar)
 
     async def update_foo(self, ids: list[int]) -> UUID:
-        """
+        """Updates foo instances over a saga.
 
-        :return:
+        :return: The unique identifier of the saga.
         """
 
         bars_query = BarsQueryDto(ids)

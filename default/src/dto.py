@@ -11,19 +11,19 @@ from minos.common import (
 
 
 class FooDto(MinosModel):
-    """TODO"""
+    """Foo DTO instance."""
 
     id: int
     bar: str
 
 
 class FoosQueryDto(MinosModel):
-    """TODO"""
+    """Foo's Query Dto instance."""
 
     ids: list[int]
 
 
 class BarsQueryDto(MinosModel):
-    """TODO"""
+    """Bar's query instance."""
 
     ids: list[int]
